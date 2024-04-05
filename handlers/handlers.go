@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"net/http"
+	"text/template"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +13,17 @@ import (
 )
 
 // Login route
+func LoginPage(w http.ResponseWriter, r *http.Request) {
+
+	// If not a POST request, serve the login page template.
+	tmpl, err := template.ParseFiles("templates/login.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	tmpl.Execute(w, nil)
+}
+
 func Login(c *fiber.Ctx) error {
 	// Extract the credentials from the request body
 	loginRequest := new(models.LoginRequest)
