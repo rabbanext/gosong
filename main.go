@@ -32,7 +32,6 @@ func main() {
 	// Create a new JWT middleware
 	// Note: This is just an example, please use a secure secret key
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
-
 	// Create a Login route
 	app.Post("/login", handlers.Login)
 	// Create a protected route

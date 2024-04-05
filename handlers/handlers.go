@@ -18,6 +18,7 @@ func Login(c *fiber.Ctx) error {
 			"error": err.Error(),
 		})
 	}
+
 	// Find the user by credentials
 	user, err := middlewares.FindByCredentials(loginRequest.Email, loginRequest.Password)
 	if err != nil {
