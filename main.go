@@ -4,12 +4,28 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/rabbanext/gosong/config"
+	"github.com/rabbanext/gosong/handlers"
+	"github.com/rabbanext/gosong/middlewares"
 )
 
 func main() {
+	// Create a new Fiber instance
+	app := fiber.New()
+	// Create a new JWT middleware
+	// Note: This is just an example, please use a secure secret key
+	jwt := middlewares.NewAuthMiddleware(config.Secret)
+
 	http.HandleFunc("/", LoginPage)
 	http.HandleFunc("/login", LoginPage)
 	http.HandleFunc("/welcome", WelcomePage)
+
+	// Create a Login route
+	app.Post("/login", handlers.Login)
+	// Create a protected route
+	app.Get("/protected", jwt, handlers.Protected)
 
 	// Serve static files from the "static" directory.
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
