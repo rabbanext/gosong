@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login Page</title>
+    <title>{{.Title}}</title>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h1>{{.Content}}</h1>
         <form action="/login" method="POST">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br>

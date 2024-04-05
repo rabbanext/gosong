@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/template/html/v2"
 	"github.com/rabbanext/gosong/config"
 	"github.com/rabbanext/gosong/handlers"
 	"github.com/rabbanext/gosong/middlewares"
@@ -12,31 +14,46 @@ import (
 
 func main() {
 	// Create a new Fiber instance
-	app := fiber.New()
+
+	engine := html.New("templates", ".html")
+	// Pass the engine to the Views
+	app := fiber.New(fiber.Config{
+		Views: engine,
+	})
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		// Render index
+		return c.Render("login", fiber.Map{
+			"Title":   "Hello, World!",
+			"Content": "Lets Login",
+		})
+	})
+
 	// Create a new JWT middleware
 	// Note: This is just an example, please use a secure secret key
 	jwt := middlewares.NewAuthMiddleware(config.Secret)
 
 	// Create a Login route
-	app.Get("/login", handlers.LoginPage)
 	app.Post("/login", handlers.Login)
 	// Create a protected route
 	app.Get("/protected", jwt, handlers.Protected)
 
 	// Serve static files from the "static" directory.
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	// http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Start the server on port 8080.
-	fmt.Println("Server started on http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server started on http://localhost:3000")
+	// http.ListenAndServe(":8080", nil)
+	log.Fatal(app.Listen(":3000"))
 }
 
-func backup(){
+func backup() {
 	// http.HandleFunc("/", LoginPage)
 	// http.HandleFunc("/login", LoginPage)
 	// http.HandleFunc("/welcome", WelcomePage)
 
 }
+
 // func SignupPage(w http.ResponseWriter, r *http.Request) {
 // 	if r.Method == http.MethodPost {
 // 		// Retrieve signup form data.
